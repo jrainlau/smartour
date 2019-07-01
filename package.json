@@ -1,0 +1,29 @@
+{
+  "name": "smartour",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrainlau/smartour.git"
+  },
+  "keywords": [],
+  "author": "JRAIN LAU",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jrainlau/smartour/issues"
+  },
+  "homepage": "https://github.com/jrainlau/smartour#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "rollup": "^1.16.3",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-typescript": "^1.0.1",
+    "tslib": "^1.10.0",
+    "typescript": "^3.5.2"
+  }
+}
