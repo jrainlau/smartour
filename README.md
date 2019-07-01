@@ -124,5 +124,23 @@ The `Smartour()` is a class who recives an `options` parameter.
   tour.over(tour) // all the guides were removed
   ```
 
+- `reset(options)`
+
+  Set a new `options` to the `Smartour` instance.
+
+  ```javascript
+  const tour = new Smartour().queue(TourList)
+
+  await tour.next() // shows the first tour guide
+  await sleep(2000) // 2s timeout
+
+  tour.reset({
+    maskStyle: `
+      border-radius: 5px;
+    `
+  })
+  tour.next()
+  ```
+
 ## License
 MIT
