@@ -33,12 +33,12 @@ main .desc {
   font-weight: normal;
   margin: 10px 0;
   color: #fff;
-  text-shadow: 0 0 8px #333;
+  text-shadow: 0 0 10px #333;
 }
 main .link {
   font-size: 1.2rem;
   color: #fff;
-  text-shadow: 0 0 8px #333;
+  text-shadow: 0 0 10px #333;
 }
 .guide {
   background: #fff;
