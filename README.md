@@ -1,5 +1,7 @@
 # Smartour
 
+![](https://user-images.githubusercontent.com/12172868/60486876-d197df80-9cd1-11e9-93bd-086f934fc904.gif)
+
 Once a website has changed its UI, usually they would set a list of tour guide to tell the visitors, that some modules were moved to the other places. We named it as "tour guide", and **Smartour** is a solution for making tour guide much easier.
 
 ## Usage
