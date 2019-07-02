@@ -1,6 +1,6 @@
 # Smartour
 
-Makes website guiding easier.
+Once a website has changed its UI, usually they would set a list of tour guide to tell the visitors, that some modules were moved to the other places. We named it as "tour guide", and **Smartour** is a solution for making tour guide much easier.
 
 ## Usage
 **Smartour** were built as an `umd` package, which means you can import it in many ways.
