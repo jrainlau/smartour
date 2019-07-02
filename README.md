@@ -5,6 +5,19 @@ Makes website guiding easier.
 ## Usage
 **Smartour** were built as an `umd` package, which means you can import it in many ways.
 
+```
+npm install smartour
+```
+
+```javascript
+/* ES Modules */
+import Smartour from 'smartour'
+/* CommandJS */
+const Smartour = require('smartour')
+/* <script> */
+<script src="smartour/dist/index.js"></script>
+```
+
 ```javascript
 const tour = new Smartour().queue([{
   el: '#id',
