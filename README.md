@@ -126,9 +126,9 @@ The `Smartour()` is a class who recives an `options` parameter.
   await tour.prev() // shows the first tour guide again
   ```
 
-- `over(smartourInstance)`
+- `over()`
 
-  `.over(smartourInstance)` is a function to remove all the guides.
+  `.over()` is a function to remove all the guides.
 
   ```javascript
   const tour = new Smartour().queue(TourList)
@@ -136,7 +136,7 @@ The `Smartour()` is a class who recives an `options` parameter.
   await tour.next() // shows the first tour guide
   await sleep(2000) // 2s timeout
 
-  tour.over(tour) // all the guides were removed
+  tour.over() // all the guides were removed
   ```
 
 - `reset(options)`
@@ -221,7 +221,7 @@ const tour = new Smartour({
   keyNodes: [{
     el: '.btn-3',
     event () {
-      tour.over(tour)
+      tour.over()
     }
   }]
 }])

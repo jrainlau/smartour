@@ -163,11 +163,13 @@ export default class Smartour {
     return Promise.resolve(this)
   }
 
-  over (smartour: Smartour) {
+  over () {
     document.body.removeChild(this.instance)
     document.body.removeChild(this.preventLayer)
     document.body.removeChild(this.slot)
 
-    smartour = null
+    this.instance = null
+    this.preventLayer = null
+    this.slot = null
   }
 }
