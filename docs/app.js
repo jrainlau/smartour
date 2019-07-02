@@ -53,7 +53,9 @@ const tour = new Smartour({
   }]
 }])
 
-tour.next()
+document.addEventListener('DOMContentLoaded', function () {
+  tour.next()
+})
 
 console.log('====↓↓↓↓↓ The code of this demo ↓↓↓↓↓====')
 console.log(`
