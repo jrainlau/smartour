@@ -1,7 +1,7 @@
 {
   "name": "smartour",
   "version": "1.0.0",
-  "description": "",
+  "description": "Makes web page touring easier.",
   "main": "dist/index.js",
   "scripts": {
     "build": "rollup -c"
