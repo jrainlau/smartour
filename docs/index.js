@@ -32,7 +32,7 @@
 
     var noop = function () { };
     var preventDefault = function (e) { e.preventDefault(); };
-    var MASK_BASE_STYLE = "\n  position: fixed;\n  box-shadow: 0 0 0 9999px rgba(0, 0, 0, .5);\n  z-index: 9998;\n";
+    var MASK_BASE_STYLE = "\n  position: fixed;\n  box-shadow: 0 0 0 9999px rgba(0, 0, 0, .5);\n  z-index: 9998;\n  transition: all .3s;\n";
     var SLOT_BASE_STYLE = "\n  position: fixed;\n  z-index: 9999;\n";
     var PREVENT_LAYER_STYLE = "\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 9997;\n";
     var BASE_OPTIONS = {
@@ -146,10 +146,13 @@
             this.show(false);
             return Promise.resolve(this);
         };
-        Smartour.prototype.over = function (smartour) {
+        Smartour.prototype.over = function () {
             document.body.removeChild(this.instance);
             document.body.removeChild(this.preventLayer);
             document.body.removeChild(this.slot);
+            this.instance = null;
+            this.preventLayer = null;
+            this.slot = null;
         };
         return Smartour;
     }());

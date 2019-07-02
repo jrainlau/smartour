@@ -10,6 +10,7 @@ export const MASK_BASE_STYLE: string = `
   position: fixed;
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, .5);
   z-index: 9998;
+  transition: all .3s;
 `
 
 export const SLOT_BASE_STYLE: string = `
