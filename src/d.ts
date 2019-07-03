@@ -15,6 +15,7 @@ interface KeyNodes {
 export interface TourListItem {
   el: string
   slot: string
+  options: Options
   keyNodes: Array<KeyNodes>
 }
 

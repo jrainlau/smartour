@@ -1,3 +1,5 @@
+
+(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
@@ -33,7 +35,7 @@
     var noop = function () { };
     var preventDefault = function (e) { e.preventDefault(); };
     var MASK_BASE_STYLE = "\n  position: fixed;\n  box-shadow: 0 0 0 9999px rgba(0, 0, 0, .5);\n  z-index: 9998;\n  transition: all .3s;\n";
-    var SLOT_BASE_STYLE = "\n  position: fixed;\n  z-index: 9999;\n";
+    var SLOT_BASE_STYLE = "\n  position: fixed;\n  z-index: 9999;\n  transition: all .3s;\n";
     var PREVENT_LAYER_STYLE = "\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 9997;\n";
     var BASE_OPTIONS = {
         maskStyle: '',
@@ -43,6 +45,7 @@
         maskEventType: 'click',
         maskEvent: noop
     };
+    //# sourceMappingURL=const.js.map
 
     var Smartour = /** @class */ (function () {
         function Smartour(options) {
@@ -115,11 +118,14 @@
                 throw new Error("There has no more " + (next ? 'next' : 'prev') + " tour to show.");
             }
             var tour = this.tourList[this.tourIndex];
+            if (tour.options) {
+                this.init(tour.options);
+            }
             this.createPreventLayer();
             this.createInstance();
             this.createSlot(tour.slot);
             var target = document.querySelector(tour.el);
-            var _a = target.getBoundingClientRect(), width = _a.width, height = _a.height, top = _a.top, left = _a.left, right = _a.right, bottom = _a.bottom;
+            var _a = target.getBoundingClientRect(), width = _a.width, height = _a.height, top = _a.top, left = _a.left;
             var _b = [top - this.maskPadding.vertical, left - this.maskPadding.horizontal, width + 2 * this.maskPadding.horizontal, height + 2 * this.maskPadding.vertical], instanceTop = _b[0], instanceLeft = _b[1], instanceWidth = _b[2], instanceHeight = _b[3];
             this.instance.setAttribute('style', this.maskStyle + ("\n      top: " + instanceTop + "px;\n      left: " + instanceLeft + "px;\n      width: " + instanceWidth + "px;\n      height: " + instanceHeight + "px;\n    "));
             this.slot.setAttribute('style', this.slotStyle + this.getSlotPosition(instanceTop, instanceLeft, instanceWidth, instanceHeight));

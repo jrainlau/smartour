@@ -4,7 +4,8 @@
   "description": "Makes web page touring easier.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c=./rollup/rollup.prod.js",
+    "dev": "rollup -c=./rollup/rollup.dev.js -w"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,8 @@
   "homepage": "https://github.com/jrainlau/smartour#readme",
   "devDependencies": {
     "rollup": "^1.16.3",
+    "rollup-plugin-livereload": "^1.0.1",
+    "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-typescript": "^1.0.1",
     "tslib": "^1.10.0",
     "typescript": "^3.5.2"

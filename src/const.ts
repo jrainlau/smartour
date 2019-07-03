@@ -16,6 +16,7 @@ export const MASK_BASE_STYLE: string = `
 export const SLOT_BASE_STYLE: string = `
   position: fixed;
   z-index: 9999;
+  transition: all .3s;
 `
 
 export const PREVENT_LAYER_STYLE: string = `

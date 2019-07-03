@@ -121,12 +121,16 @@ export default class Smartour {
     }
     const tour =  this.tourList[this.tourIndex]
 
+    if (tour.options) {
+      this.init(tour.options)
+    }
+
     this.createPreventLayer()
     this.createInstance()
     this.createSlot(tour.slot)
 
     const target = document.querySelector(tour.el)
-    const { width, height, top, left, right, bottom } = target.getBoundingClientRect()
+    const { width, height, top, left } = target.getBoundingClientRect()
     const [instanceTop, instanceLeft, instanceWidth, instanceHeight] = [top - this.maskPadding.vertical, left - this.maskPadding.horizontal, width + 2 * this.maskPadding.horizontal, height + 2 * this.maskPadding.vertical]
     this.instance.setAttribute('style', this.maskStyle + `
       top: ${instanceTop}px;
@@ -134,6 +138,7 @@ export default class Smartour {
       width: ${instanceWidth}px;
       height: ${instanceHeight}px;
     `)
+    
     this.slot.setAttribute('style', this.slotStyle + this.getSlotPosition(instanceTop, instanceLeft, instanceWidth, instanceHeight))
 
     tour.keyNodes && tour.keyNodes.forEach(({ el, event, eventType = 'click' }) => {
