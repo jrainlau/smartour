@@ -1,229 +1,175 @@
 # Smartour
 
-![](https://user-images.githubusercontent.com/12172868/60486876-d197df80-9cd1-11e9-93bd-086f934fc904.gif)
+![Jul-04-2019 18-07-06](https://user-images.githubusercontent.com/12172868/60658829-9985cd80-9e86-11e9-9fa1-b05d89fc1849.gif)
 
-Once a website has changed its UI, usually they would set a list of tour guide to tell the visitors, that some modules were moved to the other places. We named it as "tour guide", and **Smartour** is a solution for making tour guide much easier.
+Once a website has changed its UI, usually they would set a list of tour guide to tell the visitors, that some modules were moved to the other places. We named it as "tour guide", and Smartour is a solution for making tour guide much easier.
 
-## Usage
-**Smartour** were built as an `umd` package, which means you can import it in many ways.
+See live demo here: https://jrainlau.github.io/smartour
+
+# Install
+**Smartour** was built to an `umd` and `es modules` package.
 
 ```
 npm install smartour
 ```
 
-```javascript
+```
 /* ES Modules */
-import Smartour from 'smartour'
+import Smartour from 'smartour/dist/index.esm.js'
 /* CommandJS */
 const Smartour = require('smartour')
 /* <script> */
 <script src="smartour/dist/index.js"></script>
 ```
 
+# Basic usage
+
+**Smartour** provides a very simple API `focus()`, it's the easist way to highlight an element.
+
 ```javascript
-const tour = new Smartour().focus({
-  el: '#example',
-  slot: `<div>This is an example</div>`
+let tour = new Smartour()
+
+tour.focus({
+  el: '#basic-usage'
 })
 ```
 
-## Options
-The `Smartour()` is a class who recives an `options` parameter.
+# Slot
+
+`slot` is a html string that allows you to add a description to the highlighted element.
+
+## Pure string:
+```javascript
+let tour = new Smartour()
+
+tour.focus({
+  el: '#pure-string',
+  slot: 'This is a pure string'
+})
+```
+
+## Html string
+```javascript
+let tour = new Smartour()
+
+tour.focus({
+  el: '#html-string',
+  slot: `
+    <div>
+      <p>This is a html string</p>
+    </div>
+  `
+})
+```
+
+## Slot positions
+
+There are 4 positions to place a slot: `top`, `right`, `left`, `bottom`.
+
+Set the `options.slotPosition` attribute to overwrite the default `top`.
+
+```javascript
+let tour = new Smartour()
+
+tour.focus({
+  el: '#slot-positions',
+  slot: `top`,
+  options: {
+    slotPosition: 'top' // default is `top`
+  }
+})
+```
+
+## Slot events
+The slot element could bind events, too. We can use the `keyNodes` attribute to bind events to them.
+
+`keyNodes` is an array contains with `keyNode`. The attribute `keyNode.el` is a css selector, and the other `keyNode.event` is the binding event.
+
+```javascript
+let tour = new Smartour()
+
+tour.focus({
+  el: '.slot-events-demo',
+  options: {
+    slotPosition: 'right'
+  },
+  slot: `
+    <button class="demo-btn occur-1">
+      Click here to occur an alert event
+    </button>
+    <button class="demo-btn occur-2">
+      Click here to occur an alert event
+    </button>
+  `,
+  keyNodes: [{
+    el: '.occur-1',
+    event: () => { alert('Event!!') }
+  }, {
+    el: '.occur-2',
+    event: () => { alert('Another event!!') }
+  }]
+})
+```
+
+# Queue
+Sometimes there are more than one tour guide to show. **Smartour** allows you to put the tour guides together as a queue and show them one by one.
+
+```javascript
+let tour = new Smartour()
+
+tour
+  .queue([{
+    el: '.li-1',
+    options: {
+      layerEvent: tour.next.bind(tour)
+    },
+    slot: 'This is the 1st line.'
+  }, {
+    el: '.li-2',
+    options: {
+      layerEvent: tour.next.bind(tour)
+    },
+    slot: 'This is the 2nd line.'
+  }, {
+    el: '.li-3',
+    options: {
+      layerEvent: tour.next.bind(tour)
+    },
+    slot: 'This is the 3rd line.'
+  }])
+  .run() // don't forget to trigger api `run()` to show the first tour guide
+```
+
+# Options
+**Smartour** is a constructor and receives an `options` parameter to overwrite the default.
+
+Let's take a look at the default options:
 
 ```javascript
 {
-  // `maskStyle` is the stylesheet of the mask.
-  // default value will be concated with the new defined.
-  markStyle: `
-    position: fixed;
-    box-shadow: 0 0 0 9999px rgba(0, 0, 0, .5);
-    z-index: 9998;
-  `, // default
-
-  // `slotStyle` is the stylesheet of the slot content.
-  // default value will be concated with the new defined.
-  slotStyle: `
-    position: fixed;
-    z-index: 9999;
-  }` // default
-
-  // `maskPadding` sets the padding within the highligt area
-  maskPadding: { vertical: 5, horizontal: 5 }, // default
-
-  // `slotPosition` sets the position of the slot content
-  // 'top', 'top-right', 'top-left', 'bottom', 'bottom-right', 'bottom-left' are allowd.
-  slotPosition: 'bottom', // default
-
-  // `maskEventType` event type of the trigger event binding to the mask
-  // 'click', 'mouseon', 'mouseover', 'mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend' are allowd
-  maskEventType: 'click', //default
-
-  // `maskEvent` is the event binding to the mask
-  maskEvent: () => {} // default
+  prefix: 'smartour', // class prefix
+  padding: 5, // padding of the highlight area
+  maskColor: 'rgba(0, 0, 0, .5)', // maskColor with alpha
+  animate: true, // use animate while changing tour guides
+  slotPosition: 'top' // default slot position
+  layerEvent: smartour.over // events while clicking the layer
+}
 ```
 
-## APIs
-- `queue(TourList)`
-  
-  `.queue()` recieves a `TourList` parameter, which is a list contains one or more `TourListItem`.
+# APIs
+Besides `.focus()`, `.queue()` and `.run()`, **Smartour** alse privides two apis to handle the tour guide playing.
 
-  ```javascript
-  [{
-    // `el` is the selector of the highlight element
-    el: '#id-1',
+- `.next()`: Show the next tour guide. (Only work with `.queue()`)
 
-    // `slot` is a html string of the guide content
-    slot: `
-      <p>This is a demo...<p>
-      <button class="key-1">Cancel</button>
-      <button class="key-2">OK</button>
-    `,
+- `.prev()`: Show the previous tour guide. (Only work with `.queue()`)
 
-    // `keyNodes` defines the binding relationship between events and slot
-    keyNodes: [{
-      el: '.key-1',
-      eventType: 'click',
-      event: (e) => {
-        alert('Click "Cancel" button')
-      }
-    }, {
-      el: '.key-2',
-      eventType: 'mouseover',
-      event: (e) => {
-        alert('Hover "OK" button')
-      }
-    }]
-  }]
-  ```
+# Principles of Smartour
 
-- `next()`
+**Smartour** uses api `element.getBoundingClientRect()` to detect the size and position of the target element, than place a rect element with `box-shadow` over it as the highlight area.
 
-  `.next()` is a function to show the next tour guide, and returns a `Promise` which contains the `Smartour` instance.
+Because click events could not be triigered from the `box-shadow` area, **Smartour** place another transparent layer over the page, and bind `layerEvent()` to it to solve this problem.
 
-  ```javascript
-  const tour = new Smartour().queue(TourList)
+The position of the highlight area and slot are `absolute`. Every time the page scrolled, the value of `document.documentElement.scrollTop` or `document.documentElement.scrollLeft` would be changed, and **Smartour** will use these values to correct the position.
 
-  await tour.next() // shows the first tour guide
-  await sleep(2000) // 2s timeout
-  await tour.next() // shows the second tour guide
-  ```
-
-- `prev()`
-
-  `.prev()` is a function to show the prev tour guide, and returns a `Promise` which contains the `Smartour` instance.
-
-  ```javascript
-  const tour = new Smartour().queue(TourList)
-
-  await tour.next() // shows the first tour guide
-  await sleep(2000) // 2s timeout
-  await tour.next() // shows the second tour guide
-  await sleep(2000) // 2s timeout
-  await tour.prev() // shows the first tour guide again
-  ```
-
-- `over()`
-
-  `.over()` is a function to remove all the guides.
-
-  ```javascript
-  const tour = new Smartour().queue(TourList)
-
-  await tour.next() // shows the first tour guide
-  await sleep(2000) // 2s timeout
-
-  tour.over() // all the guides were removed
-  ```
-
-- `reset(options)`
-
-  Set a new `options` to the `Smartour` instance.
-
-  ```javascript
-  const tour = new Smartour().queue(TourList)
-
-  await tour.next() // shows the first tour guide
-  await sleep(2000) // 2s timeout
-
-  tour.reset({
-    maskStyle: `
-      border-radius: 5px;
-    `
-  })
-  tour.next()
-  ```
-
-## Example
-We use the [official demo](https://jrainlau.github.io/smartour/) usage as an example.
-
-```html
-<body>
-  <main>
-    <h1 class="title">Smartour</h1>
-    <h3 class="desc">Makes website guiding easier</h3>
-    <a class="link" href="https://github.com/jrainlau/smartour/blob/master/README.md#smartour">Document</a>
-  </main>
-</body>
-```
-
-```javascript
-const tour = new Smartour({
-  slotPosition: 'top',
-  maskStyle: `border-radius: 4px;`
-}).queue([{
-  el: '.title',
-  slot: `
-    <div class="guide guide-1">
-      <p>This is my name!</p>
-      <button class="btn btn-1">OK.</button>
-    </div>
-  `,
-  keyNodes: [{
-    el: '.btn-1',
-    event () {
-      tour.reset({
-        slotPosition: 'bottom-right',
-        maskStyle: `border-radius: 4px;`
-      })
-      tour.next()
-    }
-  }]
-}, {
-  el: '.desc',
-  slot: `
-    <div class="guide guide-2">
-      <p>This is what my job is!</p>
-      <button class="btn btn-2">Yeah.</button>
-    </div>
-  `,
-  keyNodes: [{
-    el: '.btn-2',
-    event () {
-      tour.reset({
-        slotPosition: 'bottom',
-        maskStyle: `border-radius: 4px;`
-      })
-      tour.next()
-    }
-  }]
-}, {
-  el: '.link',
-  slot: `
-    <div class="guide guide-3">
-      <p>This is the document!</p>
-      <button class="btn btn-3">Got it.</button>
-    </div>
-  `,
-  keyNodes: [{
-    el: '.btn-3',
-    event () {
-      tour.over()
-    }
-  }]
-}])
-
-tour.next()
-```
-
-## License
+# License
 MIT
