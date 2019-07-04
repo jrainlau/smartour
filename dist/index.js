@@ -1,168 +1,188 @@
-
-(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
-    (global = global || self, global.Smartour = factory());
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = global || self, global.Smartour = factory());
 }(this, function () { 'use strict';
 
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation. All rights reserved.
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-    this file except in compliance with the License. You may obtain a copy of the
-    License at http://www.apache.org/licenses/LICENSE-2.0
+  const maskStyle = (maskColor, animate) => `
+position: absolute;
+border-radius: 4px;
+box-shadow: 0 0 0 9999px ${maskColor};
+z-index: 10001 !important;
+transition: all .3s;
+`;
 
-    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-    MERCHANTABLITY OR NON-INFRINGEMENT.
+  const slotStyle = (animate) => `
+position: absolute;
+z-index: 10002 !important;
+transition: all .3s;
+`;
 
-    See the Apache Version 2.0 License for specific language governing permissions
-    and limitations under the License.
-    ***************************************************************************** */
+  const layerStyle = () => `
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+z-index: 10000 !important;
+`;
 
-    var __assign = function() {
-        __assign = Object.assign || function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
-        return __assign.apply(this, arguments);
-    };
+  const noop = () => {};
 
-    var noop = function () { };
-    var preventDefault = function (e) { e.preventDefault(); };
-    var MASK_BASE_STYLE = "\n  position: fixed;\n  box-shadow: 0 0 0 9999px rgba(0, 0, 0, .5);\n  z-index: 9998;\n  transition: all .3s;\n";
-    var SLOT_BASE_STYLE = "\n  position: fixed;\n  z-index: 9999;\n  transition: all .3s;\n";
-    var PREVENT_LAYER_STYLE = "\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 9997;\n";
-    var BASE_OPTIONS = {
-        maskStyle: '',
-        slotStyle: '',
-        maskPadding: { vertical: 5, horizontal: 5 },
-        slotPosition: 'bottom',
-        maskEventType: 'click',
-        maskEvent: noop
-    };
-    //# sourceMappingURL=const.js.map
+  const defaultOptions = {
+    prefix: 'smartour',
+    padding: 5,
+    maskColor: 'rgba(0, 0, 0, .5)',
+    animate: true,
+    slotPosition: 'top',
+    layerEvent: noop
+  };
 
-    var Smartour = /** @class */ (function () {
-        function Smartour(options) {
-            if (options === void 0) { options = {}; }
-            this.init(options);
+  class Smartour {
+    constructor (options = {}) {
+      this.options = {
+        ...defaultOptions,
+        layerEvent: this.over.bind(this),
+        ...options
+      };
+
+      this.mask = null;
+      this.slot = null;
+      this.layer = null;
+    }
+
+    _createMask () {
+      if (!this.mask) {
+        this.mask = document.createElement('div');
+        this.mask.setAttribute('class', this.options.prefix + '-mask');
+        this.mask.setAttribute('style', maskStyle(this.options.maskColor));
+        document.body.appendChild(this.mask);
+      }
+    }
+
+    _createSlot (html) {
+      if (!this.slot) {
+        this.slot = document.createElement('div');
+        this.slot.setAttribute('style', slotStyle());
+        document.body.appendChild(this.slot);
+      }
+      this.slot.setAttribute('class', `${this.options.prefix}-slot ${this.options.prefix}-slot_${this.options.slotPosition}`);
+      this.slot.innerHTML = html;
+    }
+
+    _createLayer () {
+      if (!this.layer) {
+        this.layer = document.createElement('div');
+        this.layer.setAttribute('class', this.options.prefix + '-layer');
+        this.layer.setAttribute('style', layerStyle());
+        this.layer.addEventListener('click', this.options.layerEvent);
+        document.body.appendChild(this.layer);
+      }
+    }
+
+    _setPosition (el, attrs) {
+  ['top', 'left', 'width', 'height'].forEach((attr, index) => {
+        if (attrs[index]) {
+          if (attr === 'top' || attr === 'left') {
+            const scrollDirection = `scroll${attr.charAt(0).toUpperCase() + attr.slice(1)}`;
+            el.style[attr] = attrs[index] + document.documentElement[scrollDirection] + 'px';
+          } else {
+            el.style[attr] = attrs[index] + 'px';
+          }
         }
-        Smartour.prototype.init = function (options) {
-            options = __assign({}, BASE_OPTIONS, options);
-            this.maskStyle = MASK_BASE_STYLE + options.maskStyle;
-            this.slotStyle = SLOT_BASE_STYLE + options.slotStyle;
-            this.maskPadding = options.maskPadding;
-            this.slotPosition = options.slotPosition;
-            this.maskEventType = options.maskEventType;
-            this.maskEvent = options.maskEvent;
-        };
-        Smartour.prototype.createPreventLayer = function () {
-            var _this = this;
-            if (!this.preventLayer) {
-                this.preventLayer = document.createElement('div');
-                this.preventLayer.setAttribute('class', 'smartour-prevent');
-                this.preventLayer.setAttribute('style', PREVENT_LAYER_STYLE);
-                ['click', 'mouseon', 'mouseover', 'mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend'].forEach(function (event) {
-                    _this.preventLayer.addEventListener(event, preventDefault);
-                });
-                this.preventLayer.addEventListener(this.maskEventType, this.maskEvent);
-                document.body.appendChild(this.preventLayer);
-            }
-        };
-        Smartour.prototype.createInstance = function () {
-            if (!this.instance) {
-                this.instance = document.createElement('div');
-                this.instance.setAttribute('id', 'smartour-instance');
-                document.body.appendChild(this.instance);
-            }
-        };
-        Smartour.prototype.createSlot = function (html) {
-            if (!this.slot) {
-                this.slot = document.createElement('div');
-                this.slot.setAttribute('id', 'smartour-slot');
-                this.slot.style.position = 'fixed';
-                document.body.appendChild(this.slot);
-            }
-            this.slot.innerHTML = html;
-        };
-        Smartour.prototype.getSlotPosition = function (instanceTop, instanceLeft, instanceWidth, instanceHeight) {
-            var _a = this.slot.getBoundingClientRect(), height = _a.height, width = _a.width;
-            var slotPos = "\n      top: " + (instanceTop - height) + "px;\n      left: " + instanceLeft + "px;\n    ";
-            if (this.slotPosition === 'top-left') ;
-            else if (this.slotPosition === 'top') {
-                slotPos = "\n        top: " + (instanceTop - height) + "px;\n        left: " + (instanceLeft + instanceWidth / 2 - width / 2) + "px;\n      ";
-            }
-            else if (this.slotPosition === 'top-right') {
-                slotPos = "\n        top: " + (instanceTop - height) + "px;\n        left: " + (instanceLeft + instanceWidth - width) + "px;\n      ";
-            }
-            else if (this.slotPosition === 'bottom') {
-                slotPos = "\n        top: " + (instanceTop + instanceHeight) + "px;\n        left: " + (instanceLeft + instanceWidth / 2 - width / 2) + "px;\n      ";
-            }
-            else if (this.slotPosition === 'bottom-left') {
-                slotPos = "\n        top: " + (instanceTop + instanceHeight) + "px;\n        left: " + instanceLeft + "px;\n      ";
-            }
-            else if (this.slotPosition === 'bottom-right') {
-                slotPos = "\n        top: " + (instanceTop + instanceHeight) + "px;\n        left: " + (instanceLeft + instanceWidth - width) + "px;\n      ";
-            }
-            return slotPos;
-        };
-        Smartour.prototype.show = function (next) {
-            if (next === void 0) { next = true; }
-            next ? this.tourIndex++ : this.tourIndex--;
-            if (this.tourIndex >= this.tourListLength || this.tourIndex < -1) {
-                throw new Error("There has no more " + (next ? 'next' : 'prev') + " tour to show.");
-            }
-            var tour = this.tourList[this.tourIndex];
-            if (tour.options) {
-                this.init(tour.options);
-            }
-            this.createPreventLayer();
-            this.createInstance();
-            this.createSlot(tour.slot);
-            var target = document.querySelector(tour.el);
-            var _a = target.getBoundingClientRect(), width = _a.width, height = _a.height, top = _a.top, left = _a.left;
-            var _b = [top - this.maskPadding.vertical, left - this.maskPadding.horizontal, width + 2 * this.maskPadding.horizontal, height + 2 * this.maskPadding.vertical], instanceTop = _b[0], instanceLeft = _b[1], instanceWidth = _b[2], instanceHeight = _b[3];
-            this.instance.setAttribute('style', this.maskStyle + ("\n      top: " + instanceTop + "px;\n      left: " + instanceLeft + "px;\n      width: " + instanceWidth + "px;\n      height: " + instanceHeight + "px;\n    "));
-            this.slot.setAttribute('style', this.slotStyle + this.getSlotPosition(instanceTop, instanceLeft, instanceWidth, instanceHeight));
-            tour.keyNodes && tour.keyNodes.forEach(function (_a) {
-                var el = _a.el, event = _a.event, _b = _a.eventType, eventType = _b === void 0 ? 'click' : _b;
-                document.querySelector(el).addEventListener(eventType, event);
-            });
-        };
-        Smartour.prototype.reset = function (options) {
-            if (options === void 0) { options = {}; }
-            this.init(options);
-        };
-        Smartour.prototype.queue = function (tourList) {
-            this.tourList = tourList;
-            this.tourListLength = tourList.length;
-            this.tourIndex = -1;
-            return this;
-        };
-        Smartour.prototype.next = function () {
-            this.show(true);
-            return Promise.resolve(this);
-        };
-        Smartour.prototype.prev = function () {
-            this.show(false);
-            return Promise.resolve(this);
-        };
-        Smartour.prototype.over = function () {
-            document.body.removeChild(this.instance);
-            document.body.removeChild(this.preventLayer);
-            document.body.removeChild(this.slot);
-            this.instance = null;
-            this.preventLayer = null;
-            this.slot = null;
-        };
-        return Smartour;
-    }());
+      });
+    }
 
-    return Smartour;
+    _show (targetSelector, slotHtml = '', keyNodes = []) {
+      this._createMask();
+      this._createSlot(slotHtml);
+      this._createLayer();
+
+      if (!this.options.animate) {
+        this.mask.style.transition = null;
+        this.slot.style.transition = null;
+      }
+
+      const target = document.querySelector(targetSelector);
+      const { top, left, width, height } = target.getBoundingClientRect();
+      const [maskTop, maskLeft, maskWidth, maskHeight] = [top - this.options.padding, left - this.options.padding, width + 2 * this.options.padding, height + 2 * this.options.padding];
+
+      this._setPosition(this.mask, [maskTop, maskLeft, maskWidth, maskHeight]);
+
+      const { width: slotWidth, height: slotHeight } = this.slot.getBoundingClientRect();
+      const { slotPosition } = this.options;
+      let [slotTop, slotLeft] = [0, 0];
+
+      if (slotPosition === 'top') {
+        [slotTop, slotLeft] = [maskTop - slotHeight, maskLeft + maskWidth / 2 - slotWidth / 2];
+      } else if (slotPosition === 'bottom') {
+        [slotTop, slotLeft] = [maskTop + maskHeight, maskLeft + maskWidth / 2 - slotWidth / 2];
+      } else if (slotPosition === 'left') {
+        [slotTop, slotLeft] = [maskTop - (slotHeight - maskHeight) / 2, maskLeft - slotWidth];
+      } else if (slotPosition === 'right') {
+        [slotTop, slotLeft] = [maskTop - (slotHeight - maskHeight) / 2, maskLeft + maskWidth];
+      }
+
+      this._setPosition(this.slot, [slotTop, slotLeft]);
+      if (!slotHtml) {
+        document.body.removeChild(this.slot);
+        this.slot = null;
+      }
+
+      if (keyNodes.length) {
+        keyNodes.forEach(({ el, event }) => {
+          document.querySelector(el).addEventListener('click', event);
+        });
+      }
+    }
+
+    focus ({ el = '', slot = '', keyNodes = [], options = {}}) {
+      if (Object.keys(options).length) {
+        this.options = { ...this.options, ...options };
+      }
+      this._show(el, slot, keyNodes);
+    }
+
+    queue (tourList) {
+      this.tourList = tourList;
+      this.tourListLength = tourList.length;
+      this.tourIndex = -1;
+
+      return this
+    }
+
+    run (isNext = true) {
+      if (this.tourListLength && this.tourIndex < this.tourListLength - 1) {
+        isNext ? this.tourIndex++ : this.tourIndex--;
+        const tour = this.tourList[this.tourIndex];
+        if (tour.options) {
+          this.options = { ...this.options, ...tour.options };
+        }
+        this._show(tour.el, tour.slot, tour.keyNodes);
+      } else {
+        this.over();
+      }
+    }
+
+    next () {
+      this.run(true);
+    }
+
+    prev () {
+      this.run(false);
+    }
+
+    over () {
+      this.mask && document.body.removeChild(this.mask);
+      this.slot && document.body.removeChild(this.slot);
+      this.layer && document.body.removeChild(this.layer)
+
+      ;['mask', 'slot', 'layer'].forEach(attr => {
+        this[attr] = null;
+      });
+    }
+  }
+
+  return Smartour;
 
 }));

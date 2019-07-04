@@ -21,14 +21,10 @@ const Smartour = require('smartour')
 ```
 
 ```javascript
-const tour = new Smartour().queue([{
-  el: '#id',
-  slot: `
-    <p>Something you want to guide to the visitors</p>
-  `
-}])
-
-tour.next()
+const tour = new Smartour().focus({
+  el: '#example',
+  slot: `<div>This is an example</div>`
+})
 ```
 
 ## Options
