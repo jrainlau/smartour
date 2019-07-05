@@ -4,7 +4,8 @@
   "description": "Makes web page touring easier.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "rollup": "^1.16.3",
     "rollup-plugin-typescript": "^1.0.1",
+    "standard-version": "^6.0.1",
     "tslib": "^1.10.0",
     "typescript": "^3.5.2"
   }
