@@ -6,6 +6,8 @@ Once a website has changed its UI, usually they would set a list of tour guide t
 
 See live demo here: https://jrainlau.github.io/smartour
 
+[中文文档](https://github.com/jrainlau/smartour/blob/master/README.zh.md)
+
 # Install
 **Smartour** was built to an `umd` and `es modules` package.
 
