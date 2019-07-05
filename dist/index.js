@@ -27,15 +27,12 @@ bottom: 0;
 z-index: 10000 !important;
 `;
 
-  const noop = () => {};
-
   const defaultOptions = {
     prefix: 'smartour',
     padding: 5,
     maskColor: 'rgba(0, 0, 0, .5)',
     animate: true,
-    slotPosition: 'top',
-    layerEvent: noop
+    slotPosition: 'top'
   };
 
   class Smartour {
@@ -85,7 +82,13 @@ z-index: 10000 !important;
         if (attrs[index]) {
           if (attr === 'top' || attr === 'left') {
             const scrollDirection = `scroll${attr.charAt(0).toUpperCase() + attr.slice(1)}`;
-            el.style[attr] = attrs[index] + document.documentElement[scrollDirection] + 'px';
+            let scrollDistance = 0;
+            if (document.documentElement && document.documentElement[scrollDirection]) {
+              scrollDistance = document.documentElement[scrollDirection];
+            } else {
+              scrollDistance = document.body[scrollDirection];
+            }
+            el.style[attr] = attrs[index] + scrollDistance + 'px';
           } else {
             el.style[attr] = attrs[index] + 'px';
           }
