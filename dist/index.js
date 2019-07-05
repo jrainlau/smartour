@@ -121,16 +121,16 @@
             var _g = this.slot.getBoundingClientRect(), slotWidth = _g.width, slotHeight = _g.height;
             var slotPosition = this.options.slotPosition;
             var _h = [0, 0], slotTop = _h[0], slotLeft = _h[1];
-            if (slotPosition === 'top') {
+            if (slotPosition === SlotPosition.TOP) {
                 _a = [maskTop - slotHeight, maskLeft + maskWidth / 2 - slotWidth / 2], slotTop = _a[0], slotLeft = _a[1];
             }
-            else if (slotPosition === 'bottom') {
+            else if (slotPosition === SlotPosition.BOTTOM) {
                 _b = [maskTop + maskHeight, maskLeft + maskWidth / 2 - slotWidth / 2], slotTop = _b[0], slotLeft = _b[1];
             }
-            else if (slotPosition === 'left') {
+            else if (slotPosition === SlotPosition.LEFT) {
                 _c = [maskTop - (slotHeight - maskHeight) / 2, maskLeft - slotWidth], slotTop = _c[0], slotLeft = _c[1];
             }
-            else if (slotPosition === 'right') {
+            else if (slotPosition === SlotPosition.RIGHT) {
                 _d = [maskTop - (slotHeight - maskHeight) / 2, maskLeft + maskWidth], slotTop = _d[0], slotLeft = _d[1];
             }
             this._setPosition(this.slot, [slotTop, slotLeft]);

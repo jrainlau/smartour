@@ -108,13 +108,13 @@ export default class Smartour {
     const { slotPosition } = this.options
     let [slotTop, slotLeft] = [0, 0]
 
-    if (slotPosition === 'top') {
+    if (slotPosition === SlotPosition.TOP) {
       [slotTop, slotLeft] = [maskTop - slotHeight, maskLeft + maskWidth / 2 - slotWidth / 2]
-    } else if (slotPosition === 'bottom') {
+    } else if (slotPosition === SlotPosition.BOTTOM) {
       [slotTop, slotLeft] = [maskTop + maskHeight, maskLeft + maskWidth / 2 - slotWidth / 2]
-    } else if (slotPosition === 'left') {
+    } else if (slotPosition === SlotPosition.LEFT) {
       [slotTop, slotLeft] = [maskTop - (slotHeight - maskHeight) / 2, maskLeft - slotWidth]
-    } else if (slotPosition === 'right') {
+    } else if (slotPosition === SlotPosition.RIGHT) {
       [slotTop, slotLeft] = [maskTop - (slotHeight - maskHeight) / 2, maskLeft + maskWidth]
     }
 
