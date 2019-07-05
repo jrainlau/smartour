@@ -1,15 +1,34 @@
-import { maskStyle, slotStyle, layerStyle, noop, preventDefault } from './utils'
+import {
+  SlotPosition,
+  Options,
+  HightlightElement,
+  KeyNode
+} from './d'
 
-const defaultOptions = {
+import {
+  maskStyle,
+  slotStyle,
+  layerStyle
+} from './utils'
+
+const defaultOptions: Options = {
   prefix: 'smartour',
   padding: 5,
   maskColor: 'rgba(0, 0, 0, .5)',
   animate: true,
-  slotPosition: 'top'
+  slotPosition: SlotPosition.TOP
 }
 
 export default class Smartour {
-  constructor (options = {}) {
+  options: Options
+  mask: HTMLElement
+  slot: HTMLElement
+  layer: HTMLElement
+  tourList: Array<HightlightElement>
+  tourListLength: number
+  tourIndex: number
+
+  constructor (options: Options = {}) {
     this.options = {
       ...defaultOptions,
       layerEvent: this.over.bind(this),
@@ -21,7 +40,7 @@ export default class Smartour {
     this.layer = null
   }
 
-  _createMask () {
+  private _createMask () {
     if (!this.mask) {
       this.mask = document.createElement('div')
       this.mask.setAttribute('class', this.options.prefix + '-mask')
@@ -30,7 +49,7 @@ export default class Smartour {
     }
   }
 
-  _createSlot (html) {
+  private _createSlot (html: string) {
     if (!this.slot) {
       this.slot = document.createElement('div')
       this.slot.setAttribute('style', slotStyle())
@@ -40,7 +59,7 @@ export default class Smartour {
     this.slot.innerHTML = html
   }
 
-  _createLayer () {
+  private _createLayer () {
     if (!this.layer) {
       this.layer = document.createElement('div')
       this.layer.setAttribute('class', this.options.prefix + '-layer')
@@ -50,7 +69,7 @@ export default class Smartour {
     }
   }
 
-  _setPosition (el, attrs) {
+  private _setPosition (el: HTMLElement, attrs: Array<number>) {
     ;['top', 'left', 'width', 'height'].forEach((attr, index) => {
       if (attrs[index]) {
         if (attr === 'top' || attr === 'left') {
@@ -69,7 +88,7 @@ export default class Smartour {
     })
   }
 
-  _show (targetSelector, slotHtml = '', keyNodes = []) {
+  private _show (targetSelector: string, slotHtml: string = '', keyNodes: Array<KeyNode> = []) {
     this._createMask()
     this._createSlot(slotHtml)
     this._createLayer()
@@ -112,14 +131,14 @@ export default class Smartour {
     }
   }
 
-  focus ({ el = '', slot = '', keyNodes = [], options = {}}) {
-    if (Object.keys(options).length) {
-      this.options = { ...this.options, ...options }
+  focus (highlightElement: HightlightElement = { el: '', slot: '', keyNodes: [], options: {} }) {
+    if (highlightElement.options && Object.keys(highlightElement.options).length) {
+      this.options = { ...this.options, ...highlightElement.options }
     }
-    this._show(el, slot, keyNodes)
+    this._show(highlightElement.el, highlightElement.slot, highlightElement.keyNodes)
   }
 
-  queue (tourList) {
+  queue (tourList: Array<HightlightElement>) {
     this.tourList = tourList
     this.tourListLength = tourList.length
     this.tourIndex = -1
@@ -127,7 +146,7 @@ export default class Smartour {
     return this
   }
 
-  run (isNext = true) {
+  run (isNext: boolean = true) {
     if (this.tourListLength && this.tourIndex < this.tourListLength - 1) {
       isNext ? this.tourIndex++ : this.tourIndex--
       const tour = this.tourList[this.tourIndex]

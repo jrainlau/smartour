@@ -1,5 +1,7 @@
+import typescript from 'rollup-plugin-typescript'
+
 export default {
-  input: './src/smartour.js',
+  input: './src/smartour.ts',
   output: [{
     file: './dist/index.js',
     name: 'Smartour',
@@ -7,5 +9,8 @@ export default {
   }, {
     file: './dist/index.esm.js',
     format: 'es'
-  }]
+  }],
+  plugins: [
+    typescript()
+  ]
 }

@@ -1,4 +1,4 @@
-export const maskStyle = (maskColor, animate) => `
+export const maskStyle = (maskColor: string) => `
 position: absolute;
 border-radius: 4px;
 box-shadow: 0 0 0 9999px ${maskColor};
@@ -6,7 +6,7 @@ z-index: 10001 !important;
 transition: all .3s;
 `
 
-export const slotStyle = (animate) => `
+export const slotStyle = () => `
 position: absolute;
 z-index: 10002 !important;
 transition: all .3s;
@@ -23,4 +23,4 @@ z-index: 10000 !important;
 
 export const noop = () => {}
 
-export const preventDefault = (e) => e.preventDefault
+export const preventDefault = (e: Event) => e.preventDefault

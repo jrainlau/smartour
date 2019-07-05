@@ -19,8 +19,6 @@
   "homepage": "https://github.com/jrainlau/smartour#readme",
   "devDependencies": {
     "rollup": "^1.16.3",
-    "rollup-plugin-livereload": "^1.0.1",
-    "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-typescript": "^1.0.1",
     "tslib": "^1.10.0",
     "typescript": "^3.5.2"
